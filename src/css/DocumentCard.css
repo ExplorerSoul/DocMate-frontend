@@ -1,0 +1,19 @@
+.document-card {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  background-color: white;
+}
+.document-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+.document-card button {
+  margin-top: 0.5rem;
+  background: #28a745;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  cursor: pointer;
+}

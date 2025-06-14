@@ -1,0 +1,23 @@
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  padding: 1rem;
+  align-items: center;
+}
+.upload-form input[type="file"] {
+  border: 1px solid #ccc;
+  
+}
+.upload-form input[type="text"] {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+}
+.upload-form button {
+  background-color: #0077cc;
+  color: white;
+  padding: 0.5rem 0.5rem;
+  border: none;
+  cursor: pointer;
+}
