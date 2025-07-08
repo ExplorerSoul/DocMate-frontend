@@ -1,95 +1,63 @@
-import { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import { getLockContract } from "./utils/contract";
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import HeroSection from './components/HeroSection';
+import LoginPanel from './components/LoginPanel';
+import FeaturesSection from './components/FeaturesSection';
+import HowItWorks from './components/HowItWorks';
+import TeamSection from './components/TeamSection';
+import Footer from './components/Footer';
+import StudentLogin from './pages/auth/StudentLogin';
+import StudentSignup from './pages/auth/StudentSignup';
+import StudentDashboard from './pages/dashboards/StudentDashboard';
+import AdminLogin from './pages/auth/AdminLogin';
+import AdminSignup from './pages/auth/AdminSignup';
+import AdminDashboard from './pages/dashboards/AdminDashboard';
+import PublicVerify from './pages/dashboards/PublicVerify';
+import './index.css';
 
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import DocumentPage from "./pages/DocumentPage";
-import DocumentList from "./components/DocumentList";
-import VerifyDocumentForm from "./components/VerifyDocumentForm"; // ✅ updated
+function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-import "./css/App.css";
-
-export default function App() {
-  const [documents, setDocuments] = useState([]);
-  const [contract, setContract] = useState(null);
-  const [walletAddress, setWalletAddress] = useState("");
-
-  // 🔗 Wallet connection + smart contract init
-  const connectWallet = async () => {
-    try {
-      if (!window.ethereum) {
-        alert("MetaMask is not installed!");
-        return;
-      }
-
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      if (accounts.length > 0) {
-        setWalletAddress(accounts[0]);
-        const instance = await getLockContract();
-        setContract(instance);
-      }
-    } catch (error) {
-      console.error("Wallet connection failed:", error);
-      alert("Failed to connect wallet.");
-    }
-  };
-
-  // 📤 After successful document upload
-  const handleUpload = async (doc) => {
-    setDocuments((prev) => [...prev, doc]);
-    // Optionally trigger on-chain storage here
-  };
+  const LandingPage = () => (
+    <>
+      <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+      <HeroSection />
+      <LoginPanel />
+      <FeaturesSection />
+      <HowItWorks />
+      <TeamSection />
+      <Footer />
+    </>
+  );
 
   return (
-    <div className="main-section">
-      <Navbar />
+    <Router>
+      <div className="main-wrapper">
+        <Routes>
+          {/* Homepage */}
+          <Route path="/" element={<LandingPage />} />
 
-      <div className="wallet-section" style={{ padding: "1rem" }}>
-        {walletAddress ? (
-          <span className="text-green-600">🔗 Connected: {walletAddress}</span>
-        ) : (
-          <button
-            className="bg-yellow-500 text-white px-4 py-2 rounded"
-            onClick={connectWallet}
-          >
-            Connect Wallet
-          </button>
-        )}
+          {/* Student routes */}
+          <Route path="/login/student" element={<StudentLogin />} />
+          <Route path="/signup/student" element={<StudentSignup />} />
+
+          {/* Admin */}
+          <Route path="/login/admin" element={<AdminLogin />} />
+          <Route path="/signup/admin" element={<AdminSignup />} />
+
+           {/* Dashboard Routes */}
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+          <Route path="/verify" element={<PublicVerify />} />
+
+          {/* Optional: Add 404 page */}
+          {/* <Route path="*" element={<NotFound />} /> */}
+        </Routes>
       </div>
-
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <main>
-              <Home />
-
-              <section>
-                <h2 className="section-title">Uploaded Documents</h2>
-                <div className="upload-div">
-                  <DocumentList documents={documents} />
-                </div>
-              </section>
-
-              <section>
-                <h2 className="section-title">Verify Document</h2>
-                <div className="verify-div">
-                  <VerifyDocumentForm />
-                </div>
-              </section>
-            </main>
-          }
-        />
-
-        <Route
-          path="/upload"
-          element={<DocumentPage onUpload={handleUpload} />}
-        />
-      </Routes>
-    </div>
+    </Router>
   );
 }
+
+export default App;

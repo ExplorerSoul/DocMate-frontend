@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
-import LockAbi from "../contracts/Lock.json";
+import { BrowserProvider, Contract } from "ethers";
+import AcademicCertificate from "../contracts/AcademicCertificate.json";
 
 const lockAddress = import.meta.env.VITE_LOCK_CONTRACT;
 
@@ -14,14 +14,13 @@ export async function getLockContract() {
 
     if (!isWalletConnecting) {
       isWalletConnecting = true;
-      // Explicitly request account access first
       await window.ethereum.request({ method: "eth_requestAccounts" });
     }
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new BrowserProvider(window.ethereum); // ✅ Correct for ethers v6
     const signer = await provider.getSigner();
 
-    return new ethers.Contract(lockAddress, LockAbi.abi, signer);
+    return new Contract(lockAddress, AcademicCertificate.abi, signer); // ✅ Contract import used
   } catch (err) {
     console.error("Error connecting to contract:", err);
     return null;

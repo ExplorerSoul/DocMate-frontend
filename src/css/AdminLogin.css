@@ -1,0 +1,92 @@
+.admin-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 4rem;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+}
+
+.admin-login-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.admin-login-title {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.admin-login-form input {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.admin-login-form input:focus {
+  border-color: #4f46e5;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  background-color: #ffffff;
+}
+
+.admin-login-form button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  background-color: #4f46e5;
+  color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.admin-login-form button:hover {
+  background-color: #4338ca;
+}
+
+.success,
+.error {
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.success {
+  color: #16a34a;
+}
+
+.error {
+  color: #dc2626;
+}
+
+.signup-link {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.signup-link a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}

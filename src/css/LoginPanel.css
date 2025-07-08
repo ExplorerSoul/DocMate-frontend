@@ -1,0 +1,201 @@
+.login-section {
+  padding: 5rem 1rem;
+  background-color: #f9fafb;
+}
+
+.login-section.dark {
+  background-color: #111827;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s;
+}
+
+.login-header.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: #4b5563;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.login-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.login-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border-width: 1px;
+  transform: translateY(40px);
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.login-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.login-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.gradient-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.login-card:hover .gradient-bg {
+  opacity: 0.1;
+}
+
+.gradient-line {
+  height: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.login-card:hover .gradient-line {
+  opacity: 1;
+}
+
+.login-content {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  text-align: center;
+}
+
+.icon-wrapper {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
+.login-card:hover .icon-wrapper {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.role {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+.description {
+  color: #4b5563;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Gradients and Colors for Roles */
+.admin-gradient {
+  background: linear-gradient(to right, #ef4444, #fda55c);
+}
+.admin-hover:hover {
+  background: linear-gradient(to right, #dc2626, #db2777);
+}
+.admin-bg {
+  background: linear-gradient(to right, #fc9595, #fdeedf, #fc9595);
+  animation: gradient-x 8s ease infinite;
+  background-size: 200% 200%;
+}
+.admin-text {
+  color: #dc2626;
+}
+.admin-border {
+  border-color: #fecaca;
+}
+.student-gradient {
+  background: linear-gradient(to right, #5dc0f1, #3b82f6);
+}
+.student-hover:hover {
+  background: linear-gradient(to right, #0891b2, #2563eb);
+}
+.student-bg {
+  background-image: linear-gradient(to right, #4ec1d5, #d1fcff, #4ec1d5);
+  animation: gradient-x 8s ease infinite;
+  background-size: 200% 200%;
+  background-color: #ecfeff;
+}
+.student-text {
+  color: #0e7490;
+}
+.student-border {
+  border-color: #a5f3fc;
+}
+
+.public-gradient {
+  background: linear-gradient(to right, #10b981, #67eead); /* emerald to mint */
+}
+.public-hover:hover {
+  background: linear-gradient(to right, #059669, #22c55e); /* darker emerald hover */
+}
+.public-bg {
+  background-image: linear-gradient(to right, #64e873, #ecfdf5, #64e873);
+  animation: gradient-x 8s ease infinite;
+  background-size: 200% 200%;
+  background-color: #ecfdf5; 
+}
+.public-text {
+  color: #047857; /* emerald-700 */
+}
+.public-border {
+  border-color: #a7f3d0; /* light green border */
+}

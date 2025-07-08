@@ -1,0 +1,77 @@
+.file-list-container {
+  margin-top: 1rem;
+}
+.file-list-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+.file-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.file-list-table th, .file-list-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+}
+.no-files {
+  font-style: italic;
+  color: #777;
+}
+
+.file-list-container {
+  margin-top: 1.5rem;
+  background-color: #fff;
+  padding: 1.2rem;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.file-list-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.file-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.file-list-table th,
+.file-list-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.status-verified {
+  color: green;
+  font-weight: 500;
+}
+
+.status-pending {
+  color: orange;
+  font-weight: 500;
+}
+
+.file-view-link {
+  background-image: linear-gradient(to bottom, #11ff35, #ffffff);
+  animation: gradient-x 4s ease infinite;
+  background-size: 200% 200%;
+  color: #000000;
+  /* text-decoration: underline; */
+  font-weight: 500;
+}
+
+.no-files {
+  color: #555;
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+.title {
+  text-align: center;
+}

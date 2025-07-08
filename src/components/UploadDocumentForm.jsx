@@ -1,77 +1,111 @@
 import { useState } from "react";
-import lighthouse from "@lighthouse-web3/sdk";
-import "../css/UploadDocumentForm.css";
+import { documentTypes } from "../configs/documentTypes.config";
 
-const LIGHTHOUSE_API_KEY = import.meta.env.VITE_LIGHTHOUSE_API_KEY;
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export default function UploadDocumentForm({ onUpload }) {
+export default function UploadDocumentForm({ category = "academic", onUpload }) {
   const [file, setFile] = useState(null);
-  const [title, setTitle] = useState("");
+  const [docType, setDocType] = useState("");
+  const [uploadMode, setUploadMode] = useState("single");
+  const [regdNo, setRegdNo] = useState("");
+  const [batch, setBatch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [cid, setCid] = useState("");
+
+  const docOptions = documentTypes[category] || [];
+  const currentYear = new Date().getFullYear() % 100;
+  const validBatches = Array.from({ length: 5 }, (_, i) => `${currentYear - i}`);
+
+  const isValidRegdNo = (r) => {
+    if (!/^\d{7}$/.test(r)) return false;
+    const year = parseInt(r.slice(0, 2), 10);
+    const branch = parseInt(r.slice(2, 4), 10);
+    const roll = parseInt(r.slice(4), 10);
+    const validBranches = [11, 12, 13, 14, 15, 16];
+    return (
+      year >= currentYear - 4 &&
+      year <= currentYear &&
+      validBranches.includes(branch) &&
+      roll >= 1 && roll <= 185
+    );
+  };
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+    setFile(selectedFile);
+
+    if (selectedFile.name.endsWith(".zip")) {
+      setUploadMode("bulk");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setCid("");
-
-    if (!file || !title) {
-      setError("Please provide both a title and a file.");
+    if (!file || !docType) {
+      setError("Please select a document and document type.");
       return;
     }
 
-    if (!LIGHTHOUSE_API_KEY) {
-      setError("Missing API key. Set VITE_LIGHTHOUSE_API_KEY in your .env file.");
+    if (uploadMode === "single" && !isValidRegdNo(regdNo)) {
+      setError("Invalid registration number.");
+      return;
+    }
+
+    if (uploadMode === "bulk" && !batch) {
+      setError("Please select a valid batch.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Upload to Lighthouse IPFS
-      const ipfsRes = await lighthouse.upload([file], LIGHTHOUSE_API_KEY);
-      const newCid = ipfsRes?.data?.Hash;
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("You are not logged in");
 
-      if (!newCid) throw new Error("CID not received from Lighthouse.");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("docType", docType);
+      formData.append("category", category);
 
-      const ipfsUrl = `https://gateway.lighthouse.storage/ipfs/${newCid}`;
-      setCid(newCid);
-
-      // POST metadata to backend
-      const backendRes = await fetch(`${BACKEND_URL}/api/upload`, {
+      const fetchOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          hash: newCid,
-          url: ipfsUrl,
-        }),
-      });
+        headers: {
+          Authorization: `Bearer ${token}`, // ✅ Attach token
+          // Do NOT set 'Content-Type' when sending FormData
+        },
+        body: formData,
+      };
 
-      const clone = backendRes.clone(); // for backup if json fails
+      let res, data;
 
-      let result;
-      try {
-        result = await backendRes.json(); // try to parse JSON
-      } catch {
-        const rawText = await clone.text(); // fallback if JSON fails
-        throw new Error("Backend response was not valid JSON:\n" + rawText);
+      if (uploadMode === "single") {
+        formData.append("regdNo", regdNo);
+        res = await fetch(`${BACKEND_URL}/api/upload/document`, fetchOptions);
+      } else {
+        formData.append("batch", batch);
+        res = await fetch(`${BACKEND_URL}/api/upload/bulk-zip`, fetchOptions);
       }
 
-      if (!backendRes.ok) {
-        throw new Error(result?.error || "Failed to save document metadata.");
+      data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+
+      if (uploadMode === "single") {
+        alert("✅ Single document uploaded.");
+        onUpload?.(data.document);
+      } else {
+        alert("✅ ZIP Bulk upload complete.");
       }
 
-      if (onUpload) onUpload(result.document);
-
-      // Reset form
+      // Reset
       setFile(null);
-      setTitle("");
+      setRegdNo("");
+      setBatch("");
+      setDocType("");
     } catch (err) {
       console.error("Upload error:", err);
-      setError(err.message || "An unexpected error occurred during upload.");
+      setError(err.message || "Upload failed.");
     } finally {
       setLoading(false);
     }
@@ -79,42 +113,79 @@ export default function UploadDocumentForm({ onUpload }) {
 
 
   return (
-    <form onSubmit={handleSubmit} className="upload-form">
-      <input
-        type="file"
-        accept=".pdf,image/*"
-        onChange={(e) => setFile(e.target.files[0])}
-        className="mb-2"
-      />
-      <input
-        type="text"
-        placeholder="Enter document title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        className="mb-2"
-      />
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        {loading ? "Uploading..." : "Upload"}
-      </button>
+    <form onSubmit={handleSubmit} className="request-form">
+      <div className="form-group">
+        <label className="form-label">Select Document File</label>
+        <input
+          type="file"
+          accept=".zip,.pdf"
+          onChange={handleFileChange}
+          className="form-select"
+        />
+      </div>
 
-      {cid && cid.length > 10 && (
-        <div className="mt-3 text-sm text-green-700">
-          ✅ Uploaded to IPFS:{" "}
-          <a
-            href={`https://gateway.lighthouse.storage/ipfs/${cid}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            View Document
-          </a>
+      <div className="form-group">
+        <label className="form-label">Document Type</label>
+        <select
+          value={docType}
+          onChange={(e) => setDocType(e.target.value)}
+          className="form-select"
+        >
+          <option value="">Select Document Type</option>
+          <option value="marksheet">Marksheet</option>
+          <option value="bonafide">Bonafide</option>
+          <option value="degree">Degree</option>
+          <option value="misc">Misc</option>
+          {docOptions.map((opt) => (
+            <option key={opt} value={opt}>{opt}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Upload Mode</label>
+        <select
+          value={uploadMode}
+          onChange={(e) => setUploadMode(e.target.value)}
+          className="form-select"
+        >
+          <option value="single">Single Upload</option>
+          <option value="bulk">Bulk Upload</option>
+        </select>
+      </div>
+
+      {uploadMode === "single" && (
+        <div className="form-group">
+          <label className="form-label">Student Regd. No</label>
+          <input
+            type="text"
+            placeholder="e.g. 2214134"
+            value={regdNo}
+            onChange={(e) => setRegdNo(e.target.value)}
+            className="form-select"
+          />
         </div>
       )}
 
+      {uploadMode === "bulk" && (
+        <div className="form-group">
+          <label className="form-label">Batch (Year)</label>
+          <select
+            value={batch}
+            onChange={(e) => setBatch(e.target.value)}
+            className="form-select"
+          >
+            <option value="">Select Batch</option>
+            {validBatches.map((b) => (
+              <option key={b} value={b}>{b}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <button type="submit" className="submit-button" disabled={loading}>
+        {loading ? "Uploading..." : "Upload Document"}
+      </button>
 
       {error && <div className="mt-2 text-red-500 font-medium">{error}</div>}
     </form>
