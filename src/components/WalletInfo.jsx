@@ -1,12 +1,13 @@
 import { useWallet } from "../context/WalletContext";
+import "../css/WalletInfo.css";
 
 const WalletInfo = () => {
   const { account, connectWallet, disconnectWallet } = useWallet();
 
   return (
-    <div style={{ padding: "0.5rem 1rem", background: "#f4f4f4", borderRadius: "8px", fontSize: "0.9rem" }}>
+    <div className="wallet-container">
       {!account ? (
-        <button onClick={connectWallet}>🔌 Connect Wallet</button>
+        <button className="button" onClick={connectWallet}>🔌 Connect Wallet</button>
       ) : (
         <div>
           <p>
@@ -17,7 +18,7 @@ const WalletInfo = () => {
                 : `${account.address.slice(0, 6)}...${account.address.slice(-4)}`}
             </strong>
           </p>
-          <button onClick={disconnectWallet}>❌ Disconnect</button>
+          <button className="button" onClick={disconnectWallet}>❌ Disconnect</button>
         </div>
       )}
     </div>
