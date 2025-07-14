@@ -1,6 +1,43 @@
 import "../css/FileList.css";
+import { useState } from "react";
 
 const FileList = ({ files = [], title = "Documents", downloadable = false }) => {
+  const [loadingIndex, setLoadingIndex] = useState(null);
+
+  const handleViewFile = async (file, index) => {
+    setLoadingIndex(index);
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("User not authenticated");
+
+      // ✅ Prefer s3Key if available, fallback to extracting from URL
+      const key = file.s3Key || new URL(file.url).pathname.slice(1);
+
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/files/presigned/${encodeURIComponent(key)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok && data.url) {
+        window.open(data.url, "_blank");
+      } else {
+        alert(data.error || "Failed to fetch document URL");
+      }
+    } catch (error) {
+      console.error("❌ View file error:", error);
+      alert("Something went wrong while opening the document.");
+    } finally {
+      setLoadingIndex(null);
+    }
+  };
+
   return (
     <div className="file-list-container">
       <h4 className="file-list-title">{title}</h4>
@@ -21,12 +58,11 @@ const FileList = ({ files = [], title = "Documents", downloadable = false }) => 
             <tbody>
               {files.map((file, i) => {
                 const title = file.title || file.name || `Document #${i + 1}`;
-                const isApproved = file.isApproved ?? true; // default to true for admin uploads
+                const isApproved = file.isApproved ?? true;
                 const issuedAt = file.issuedAt || file.uploadDate || file.createdAt;
                 const formattedDate = issuedAt
                   ? new Date(issuedAt).toLocaleDateString()
                   : "—";
-                const url = file.url || "#";
 
                 return (
                   <tr key={file._id || i}>
@@ -39,24 +75,12 @@ const FileList = ({ files = [], title = "Documents", downloadable = false }) => 
                       <td>
                         <button
                           className="file-view-link"
-                          onClick={async () => {
-                            const key = new URL(file.url).pathname.slice(1);
-                            const token = localStorage.getItem("token");
-                            const res = await fetch(`http://localhost:5000/api/files/presigned/${key}`, {
-                              headers: {
-                                Authorization: `Bearer ${token}`,
-                              },
-                            });
-                            const data = await res.json();
-                            if (data.url) {
-                              window.open(data.url, "_blank");
-                            }
-                          }}
+                          onClick={() => handleViewFile(file, i)}
+                          disabled={loadingIndex === i}
                         >
-                          View
+                          {loadingIndex === i ? "Loading..." : "View"}
                         </button>
                       </td>
-
                     )}
                   </tr>
                 );
