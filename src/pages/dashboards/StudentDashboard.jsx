@@ -33,6 +33,12 @@ const StudentDashboard = () => {
       await loadMyFiles();
     };
     loadData();
+
+    const intervalId = setInterval(() => {
+      loadMyFiles();
+    }, 15000); // 15s refresh
+
+    return () => clearInterval(intervalId);
   }, [account]);
 
   const loadMyFiles = async () => {

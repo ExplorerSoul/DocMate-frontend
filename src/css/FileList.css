@@ -62,8 +62,8 @@
   animation: gradient-x 4s ease infinite;
   background-size: 200% 200%;
   color: #000000;
-  /* text-decoration: underline; */
   font-weight: 500;
+  cursor: pointer;
 }
 
 .no-files {
