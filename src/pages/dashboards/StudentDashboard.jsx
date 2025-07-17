@@ -20,11 +20,47 @@ const StudentDashboard = () => {
     { id: 'downloads', label: 'Downloads', icon: Download }
   ];
 
-  // Auth check
+  // ✅ Decode JWT to check expiry
+  const decodeJWT = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(window.atob(base64));
+    } catch {
+      return null;
+    }
+  };
+
+  // ✅ Logout function
+  const logoutUser = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("tokenExpiry");
+    navigate("/login/student");
+  };
+
+  // ✅ Check token validity on page load
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const tokenExpiry = localStorage.getItem("tokenExpiry");
+
     if (!user || user.role !== "student" || !token) {
-      navigate("/login/student");
+      logoutUser();
+      return;
+    }
+
+    if (token && tokenExpiry) {
+      const now = Date.now() / 1000;
+      if (now >= parseInt(tokenExpiry)) {
+        console.warn('⚠️ Token expired. Logging out.');
+        logoutUser();
+      } else {
+        const timeLeft = (parseInt(tokenExpiry) - now) * 1000;
+        setTimeout(() => {
+          console.warn('⚠️ Auto-logout triggered due to token expiry');
+          logoutUser();
+        }, timeLeft);
+      }
     }
   }, [user, navigate]);
 
@@ -36,7 +72,7 @@ const StudentDashboard = () => {
 
     const intervalId = setInterval(() => {
       loadMyFiles();
-    }, 15000); // 15s refresh
+    }, 15000); // refresh every 15s
 
     return () => clearInterval(intervalId);
   }, [account]);
@@ -48,6 +84,10 @@ const StudentDashboard = () => {
       setMyFiles(data.documents || []);
     } catch (err) {
       console.error("❌ Failed to load documents:", err.message);
+      // ✅ If token expired or unauthorized, logout
+      if (err.response?.status === 401) {
+        logoutUser();
+      }
     } finally {
       setLoading(false);
     }
@@ -59,9 +99,7 @@ const StudentDashboard = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    navigate("/login/student");
+    logoutUser();
   };
 
   return (

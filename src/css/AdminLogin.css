@@ -1,70 +1,81 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  /* background-color: #f9fafb; */
+}
+
+/* ✅ Container */
 .admin-login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-top: 4rem;
-  min-height: 100vh;
-  background-color: #f5f7fa;
-}
-
-.admin-login-card {
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-  width: 100%;
   max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✅ Title */
+.admin-login-container h2 {
   text-align: center;
-}
-
-.admin-login-title {
   margin-bottom: 1.5rem;
-  font-size: 1.75rem;
+  color: #1e3a8a;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: #1f2937;
 }
 
-.admin-login-form input {
-  display: block;
+/* ✅ Input Fields */
+.admin-login-container input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem;
   margin-bottom: 1rem;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 1rem;
   background-color: #f9fafb;
-  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.admin-login-form input:focus {
-  border-color: #4f46e5;
+.admin-login-container input:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-  background-color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background-color: #fff;
 }
 
-.admin-login-form button {
+/* ✅ Button */
+.admin-login-container button {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  background-color: #4f46e5;
+  padding: 0.75rem;
+  background-color: #2563eb;
   color: #ffffff;
-  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.25s ease;
+  margin-bottom: 1rem;
 }
 
-.admin-login-form button:hover {
-  background-color: #4338ca;
+.admin-login-container button:hover {
+  background-color: #1e40af;
 }
 
+/* ✅ Messages */
 .success,
 .error {
   font-size: 0.95rem;
-  margin-top: 0.75rem;
   text-align: center;
+  margin-top: 0.75rem;
 }
 
 .success {
@@ -75,18 +86,49 @@
   color: #dc2626;
 }
 
+/* ✅ Signup Link */
 .signup-link {
-  margin-top: 1rem;
+  text-align: center;
+  margin-top: 2rem;
   font-size: 0.95rem;
-  color: #4b5563;
 }
 
 .signup-link a {
-  color: #4f46e5;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 500;
 }
 
 .signup-link a:hover {
   text-decoration: underline;
+}
+
+/* ✅ Optional Background Effect */
+.gradient-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(circle at top left, #c7d2fe, #eef2ff);
+  opacity: 0.2;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.login-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 480px) {
+  .admin-login-container {
+    margin: 2rem auto;
+    padding: 1.5rem;
+  }
+
+  .admin-login-container h2 {
+    font-size: 1.3rem;
+  }
 }

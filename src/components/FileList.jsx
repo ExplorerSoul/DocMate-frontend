@@ -4,32 +4,17 @@ import { useState } from "react";
 const FileList = ({ files = [], title = "Documents", downloadable = false }) => {
   const [loadingIndex, setLoadingIndex] = useState(null);
 
-  const handleViewFile = async (file, index) => {
+  const handleViewFile = (file, index) => {
+    if (!file.url) {
+      alert("File URL is missing.");
+      return;
+    }
+
     setLoadingIndex(index);
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("User not authenticated");
-
-      // ✅ Prefer s3Key if available, fallback to extracting from URL
-      const key = file.s3Key || new URL(file.url).pathname.slice(1);
-
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/files/presigned/${encodeURIComponent(key)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await res.json();
-
-      if (res.ok && data.url) {
-        window.open(data.url, "_blank");
-      } else {
-        alert(data.error || "Failed to fetch document URL");
-      }
+      // ✅ Directly open the public S3 URL in a new tab
+      window.open(file.url, "_blank");
     } catch (error) {
       console.error("❌ View file error:", error);
       alert("Something went wrong while opening the document.");
@@ -60,9 +45,14 @@ const FileList = ({ files = [], title = "Documents", downloadable = false }) => 
                 const title = file.title || file.name || `Document #${i + 1}`;
                 const isApproved = file.isApproved ?? true;
                 const issuedAt = file.issuedAt || file.uploadDate || file.createdAt;
-                const formattedDate = issuedAt
-                  ? new Date(issuedAt).toLocaleDateString()
-                  : "—";
+                const formattedDate =
+                  issuedAt && !isNaN(new Date(issuedAt))
+                    ? new Date(issuedAt).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "—";
 
                 return (
                   <tr key={file._id || i}>
@@ -78,7 +68,7 @@ const FileList = ({ files = [], title = "Documents", downloadable = false }) => 
                           onClick={() => handleViewFile(file, i)}
                           disabled={loadingIndex === i}
                         >
-                          {loadingIndex === i ? "Loading..." : "View"}
+                          {loadingIndex === i ? "Opening..." : "View"}
                         </button>
                       </td>
                     )}

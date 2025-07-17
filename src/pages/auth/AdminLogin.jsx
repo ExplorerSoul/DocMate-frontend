@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/authService';
 import '../../css/AdminLogin.css';
@@ -16,6 +16,48 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // ✅ Decode JWT to extract expiry
+  const decodeJWT = (token) => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(window.atob(base64));
+    } catch {
+      return null;
+    }
+  };
+
+  // ✅ Logout function
+  const logoutUser = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('tokenExpiry');
+    setMessage('');
+    setError('');
+    navigate('/admin/login');
+  };
+
+  // ✅ Check token validity on page load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const tokenExpiry = localStorage.getItem('tokenExpiry');
+
+    if (token && tokenExpiry) {
+      const now = Date.now() / 1000;
+      if (now >= parseInt(tokenExpiry)) {
+        console.warn('⚠️ Token expired. Logging out.');
+        logoutUser();
+      } else {
+        // ✅ Schedule auto logout when token expires
+        const timeLeft = (parseInt(tokenExpiry) - now) * 1000;
+        setTimeout(() => {
+          console.warn('⚠️ Auto-logout triggered due to token expiry');
+          logoutUser();
+        }, timeLeft);
+      }
+    }
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -31,25 +73,47 @@ const AdminLogin = () => {
       // 🔥 Clear any stale tokens before new login
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('tokenExpiry');
 
-      const res = await loginUser(formData);
+      const res = await loginUser(formData); // expects { token, name, email, institute, role, regdNo }
 
+      if (!res?.token) throw new Error('Token not received from server');
+
+      // ✅ Decode token to extract expiry
+      const decoded = decodeJWT(res.token);
+      if (!decoded || !decoded.exp) throw new Error('Invalid token');
+
+      // ✅ Save token, user, and expiry in localStorage
       localStorage.setItem('token', res.token);
+      localStorage.setItem(
+        'user',
+        JSON.stringify({
+          name: res.name,
+          email: res.email,
+          institute: res.institute,
+          role: res.role,
+          regdNo: res.regdNo,
+        })
+      );
+      localStorage.setItem('tokenExpiry', decoded.exp.toString());
 
-      const { name, email, institute, role, regdNo } = res;
-      localStorage.setItem('user', JSON.stringify({ name, email, institute, role, regdNo }));
+      setMessage(`✅ Login successful! Welcome, ${res.name || res.email}`);
 
-      setMessage(`✅ Login successful! Welcome, ${name || email}`);
+      // ✅ Schedule auto logout
+      const timeLeft = (decoded.exp - Date.now() / 1000) * 1000;
+      setTimeout(() => {
+        console.warn('⚠️ Auto-logout triggered due to token expiry');
+        logoutUser();
+      }, timeLeft);
+
       navigate('/admin/dashboard');
     } catch (err) {
-      const fallbackError = err?.message || 'Login failed';
-      const apiError = err?.response?.data?.message || fallbackError;
+      const apiError = err.response?.data?.error || err.message || 'Login failed';
       setError(apiError);
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="admin-login-container">
