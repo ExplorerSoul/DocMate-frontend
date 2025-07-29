@@ -8,13 +8,11 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
   const [docType, setDocType] = useState("");
   const [uploadMode, setUploadMode] = useState("single");
   const [regdNo, setRegdNo] = useState("");
-  const [batch, setBatch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const docOptions = documentTypes[category] || [];
   const currentYear = new Date().getFullYear() % 100;
-  const validBatches = Array.from({ length: 5 }, (_, i) => `${currentYear - i}`);
 
   const isValidRegdNo = (r) => {
     if (!/^\d{7}$/.test(r)) return false;
@@ -26,7 +24,8 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
       year >= currentYear - 4 &&
       year <= currentYear &&
       validBranches.includes(branch) &&
-      roll >= 1 && roll <= 185
+      roll >= 1 &&
+      roll <= 185
     );
   };
 
@@ -43,6 +42,7 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
     if (!file || !docType) {
       setError("Please select a document and document type.");
       return;
@@ -50,11 +50,6 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
 
     if (uploadMode === "single" && !isValidRegdNo(regdNo)) {
       setError("Invalid registration number.");
-      return;
-    }
-
-    if (uploadMode === "bulk" && !batch) {
-      setError("Please select a valid batch.");
       return;
     }
 
@@ -69,39 +64,38 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
       formData.append("docType", docType);
       formData.append("category", category);
 
-      const fetchOptions = {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`, // ✅ Attach token
-          // Do NOT set 'Content-Type' when sending FormData
-        },
-        body: formData,
-      };
-
-      let res, data;
-
       if (uploadMode === "single") {
         formData.append("regdNo", regdNo);
-        res = await fetch(`${BACKEND_URL}/api/upload/document`, fetchOptions);
-      } else {
-        formData.append("batch", batch);
-        res = await fetch(`${BACKEND_URL}/api/upload/bulk-zip`, fetchOptions);
       }
 
-      data = await res.json();
+      const url =
+        uploadMode === "single"
+          ? `${BACKEND_URL}/api/upload/document`
+          : `${BACKEND_URL}/api/upload/bulk-zip`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Upload failed");
 
       if (uploadMode === "single") {
         alert("✅ Single document uploaded.");
         onUpload?.(data.document);
       } else {
-        alert("✅ ZIP Bulk upload complete.");
+        alert(
+          `✅ ZIP Bulk upload complete. Success: ${data.successful}, Failed: ${data.failed}`
+        );
       }
 
-      // Reset
+      // ✅ Reset form
       setFile(null);
       setRegdNo("");
-      setBatch("");
       setDocType("");
     } catch (err) {
       console.error("Upload error:", err);
@@ -110,7 +104,6 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
       setLoading(false);
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} className="request-form">
@@ -137,7 +130,9 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
           <option value="degree">Degree</option>
           <option value="misc">Misc</option>
           {docOptions.map((opt) => (
-            <option key={opt} value={opt}>{opt}</option>
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
       </div>
@@ -164,22 +159,6 @@ export default function UploadDocumentForm({ category = "academic", onUpload }) 
             onChange={(e) => setRegdNo(e.target.value)}
             className="form-select"
           />
-        </div>
-      )}
-
-      {uploadMode === "bulk" && (
-        <div className="form-group">
-          <label className="form-label">Batch (Year)</label>
-          <select
-            value={batch}
-            onChange={(e) => setBatch(e.target.value)}
-            className="form-select"
-          >
-            <option value="">Select Batch</option>
-            {validBatches.map((b) => (
-              <option key={b} value={b}>{b}</option>
-            ))}
-          </select>
         </div>
       )}
 

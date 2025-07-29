@@ -10,7 +10,7 @@ const universities = [
   "IIT Bombay",
   "NIT Trichy",
   "iitk",
-  "Other"
+  "Other",
 ];
 
 export default function PublicVerify() {
@@ -24,7 +24,6 @@ export default function PublicVerify() {
   const [filteredUniversities, setFilteredUniversities] = useState(universities);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // 🔍 Filter universities as user types
   useEffect(() => {
     setFilteredUniversities(
       universities.filter((u) =>
@@ -53,6 +52,10 @@ export default function PublicVerify() {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append(
+        "institute",
+        university.trim().toLowerCase().replace(/\s+/g, "_")
+      );
 
       const res = await fetch("http://localhost:5000/api/verify", {
         method: "POST",
@@ -91,7 +94,7 @@ export default function PublicVerify() {
           <div className="custom-dropdown">
             <div
               className="dropdown-header"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              onClick={() => setDropdownOpen((prev) => !prev)}
             >
               {university || "Select University"}
               <span className="dropdown-arrow">{dropdownOpen ? "▲" : "▼"}</span>
@@ -153,20 +156,53 @@ export default function PublicVerify() {
             <p>
               {result.verified
                 ? "✅ Document Verified"
-                : "❌ Document Not Found on Blockchain"}
+                : result.type === "batch"
+                ? "🟡 Document Found in Batch"
+                : "❌ Document Not Found"}
             </p>
-            <p><strong>Cert ID:</strong> {result.certId}</p>
-            <p><strong>Student:</strong> {result.studentId}</p>
-            <p><strong>Issuer:</strong> {result.issuer}</p>
-            <p><strong>Issued At:</strong> {new Date(result.issuedAt).toLocaleDateString()}</p>
 
-            {/* University mismatch warning */}
-            {university &&
-              result.issuer?.toLowerCase().includes("0x") && (
-                <p className="mismatch-warning">
-                  ⚠️ Issuer is a blockchain address, not a university name.
-                </p>
-              )}
+            {result.certId && (
+              <p>
+                <strong>Cert ID:</strong> {result.certId}
+              </p>
+            )}
+
+            {result.studentId && (
+              <p>
+                <strong>Student:</strong> {result.studentId}
+              </p>
+            )}
+
+            {result.issuer && (
+              <p>
+                <strong>Issuer:</strong> {result.issuer}
+              </p>
+            )}
+
+            {result.issuedAt && (
+              <p>
+                <strong>Issued At:</strong> {new Date(result.issuedAt).toLocaleDateString()}
+              </p>
+            )}
+
+            {result.batchMerkleRoot && (
+              <p>
+                <strong>Batch Merkle Root:</strong> {result.batchMerkleRoot}
+              </p>
+            )}
+
+            {result.txHash && (
+              <p>
+                <strong>Transaction:</strong>{" "}
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${result.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View on Etherscan
+                </a>
+              </p>
+            )}
           </div>
         )}
 
