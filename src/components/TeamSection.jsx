@@ -1,7 +1,7 @@
 import { Linkedin, Github, User } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import '../css/TeamSection.css';
-import amit from '../assets/amit.png'; // ✅ adjust path as needed
+import amit from '../assets/amit.jpg'; // ✅ adjust path as needed
 import kuldeep from '../assets/kuldeep.jpeg'; // ✅ adjust path as needed
 import biraj from '../assets/biraj.jpeg'; // ✅ adjust path as needed
 import gaurav from '../assets/gaurav.jpeg'; // ✅ adjust path as needed
