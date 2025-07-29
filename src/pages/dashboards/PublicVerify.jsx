@@ -57,7 +57,7 @@ export default function PublicVerify() {
         university.trim().toLowerCase().replace(/\s+/g, "_")
       );
 
-      const res = await fetch("http://localhost:5000/api/verify", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/verify`, {
         method: "POST",
         body: formData,
       });
