@@ -1,8 +1,31 @@
 import { Shield, Mail, Phone, MapPin, FileText, Lock, Github, Linkedin, Twitter } from 'lucide-react';
 import '../css/Footer.css';
+import { useEffect, useState } from 'react';
 
 const Footer = ({ isDark }) => {
-  const footerClasses = ['footer', isDark ? 'dark' : ''].filter(Boolean).join(' ');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+      const handleScroll = () => {
+        setScrolled(window.scrollY > 50);
+      };
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+  
+    const scrollToSection = (sectionId) => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        // setIsMenuOpen(false);
+      }
+    };
+
+    const footerClasses = [
+      'footer',
+      scrolled ? 'footer-scrolled' : 'footer-transparent',
+      isDark ? 'footer-dark' : ''
+    ].filter(Boolean).join(' ');
 
   return (
     <footer id="contact" className={footerClasses}>
@@ -67,12 +90,19 @@ const Footer = ({ isDark }) => {
           <div className="footer-section">
             <h3 className="footer-section-title">Quick Links</h3>
             <div className="footer-links">
-              {['Features', 'How It Works', 'Our Team', 'Login Portal', 'Documentation', 'Support'].map((link) => (
+              {[
+                { label: 'Features', id: 'features' },
+                { label: 'How It Works', id: 'how-it-works' },
+                { label: 'Our Team', id: 'team' },
+                { label: 'Login Portal', id: 'login' },
+               
+              ].map((section) => (
                 <button
-                  key={link}
+                  key={section.id}
+                  onClick={() => scrollToSection(section.id)}
                   className="footer-link"
                 >
-                  {link}
+                  {section.label}
                 </button>
               ))}
             </div>
