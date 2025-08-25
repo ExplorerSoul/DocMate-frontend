@@ -251,6 +251,9 @@ const AdminDashboard = () => {
                             {student.status === 'active' && (
                               <button className="suspend-button" onClick={() => handleRevokeStudent(student._id)}>Revoke</button>
                             )}
+                            {student.status === 'suspended' && (
+                              <button className="approve-button" onClick={() => handleApproveStudent(student._id)}>Activate</button>
+                            )}
                           </td>
                         </tr>
                       ))}
