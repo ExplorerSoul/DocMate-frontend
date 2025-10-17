@@ -15,6 +15,8 @@ import AdminSignup from './pages/auth/AdminSignup';
 import AdminDashboard from './pages/dashboards/AdminDashboard';
 import PublicVerify from './pages/dashboards/PublicVerify';
 import './index.css';
+import { Scroll } from 'lucide-react';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +25,7 @@ function App() {
     <>
       <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       <HeroSection />
+      <ScrollToTopButton />
       <LoginPanel />
       <FeaturesSection />
       <HowItWorks />
