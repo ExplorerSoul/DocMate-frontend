@@ -72,7 +72,7 @@ const TeamSection = () => {
                 />
                 <div className={`card-gradient-overlay ${developer.gradient}`}></div>
                 
-                <div className="card-social">
+                {/* <div className="card-social">
                   <div className="flex justify-center space-x-4">
                     <button className="social-button">
                       <Linkedin className="h-5 w-5 text-blue-600" />
@@ -81,7 +81,7 @@ const TeamSection = () => {
                       <Github className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                     </button>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="card-content">
