@@ -4,7 +4,7 @@
   color: #111;
 }
 
-.how-it-works-section.dark {
+.dark .how-it-works-section {
   background: linear-gradient(to bottom right, #111827, #1f2937);
   color: #fff;
 }
@@ -39,6 +39,10 @@
   max-width: 600px;
   margin: 0 auto;
   color: #555;
+}
+
+.dark .section-subtitle {
+  color: #d1d5db;
 }
 
 .steps-wrapper {
@@ -141,6 +145,10 @@
   max-width: 260px;
   margin: 0 auto;
   line-height: 1.6;
+}
+
+.dark .step-description {
+  color: #d1d5db;
 }
 
 .cta-wrapper {

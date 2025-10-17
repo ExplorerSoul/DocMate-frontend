@@ -1,9 +1,9 @@
 import { Linkedin, Github, User } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import '../css/TeamSection.css';
-import amit from '../assets/amit1.jpg'; // ✅ adjust path as needed
+import amit from '../assets/amit.jpeg'; // ✅ adjust path as needed
 import kuldeep from '../assets/kuldeep.jpeg'; // ✅ adjust path as needed
-import biraj from '../assets/biraj.jpeg'; // ✅ adjust path as needed
+import biraj from '../assets/biraj.png'; // ✅ adjust path as needed
 import gaurav from '../assets/gaurav.jpeg'; // ✅ adjust path as needed
 
 
@@ -14,28 +14,28 @@ const TeamSection = () => {
     {
       name: 'Amit Ranjan Das',
       role: '4th Year ECE Student',
-      specialty: 'Full Stack Developer',
+      specialty: 'Full Stack Development',
       image: amit, // ✅ Use imported image
       gradient: 'bg-gradient-to-br from-cyan-500 to-blue-500'
     },
     {
       name: 'Kuldeep Das',
       role: '4th Year ECE Student',
-      specialty: 'Blockchain Developer',
+      specialty: 'Backend / Database Development',
       image: kuldeep,
       gradient: 'bg-gradient-to-br from-purple-500 to-pink-500'
     },
     {
       name: 'Gaurav Patgiri',
       role: '4th Year ECE Student',
-      specialty: 'Frontend Developer',
+      specialty: 'Frontend Development',
       image: gaurav,
       gradient: 'bg-gradient-to-br from-emerald-500 to-teal-500'
     },
     {
       name: 'Biraj Das',
       role: '4th Year ECE Student',
-      specialty: 'Backend Developer',
+      specialty: 'Smart Contracts Design',
       image: biraj,
       gradient: 'bg-gradient-to-br from-orange-500 to-red-500'
     }

@@ -5,7 +5,7 @@
   background-color: white;
 }
 
-.features-section.dark {
+.dark .features-section {
   background-color: #1f2937;
 }
 
@@ -56,7 +56,7 @@
   }
 }
 
-.features-section.dark .features-title {
+.dark .features-section .features-title {
   color: white;
 }
 
@@ -67,7 +67,7 @@
   margin: 0 auto;
 }
 
-.features-section.dark .features-subtitle {
+.dark .features-section .features-subtitle {
   color: #d1d5db;
 }
 
@@ -103,11 +103,13 @@
   transform: scale(1.05);
 }
 
-.features-section.dark .feature-card {
+.dark .features-section .feature-card {
   background-color: #111827;
+  /* background: linear-gradient(to bottom right, #111827, #1f2937);
+  border-color: #374151; */
 }
 
-.features-section.dark .feature-card:hover {
+.dark .features-section .feature-card:hover {
   background-color: #1f2937;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
@@ -131,7 +133,7 @@
   border-color: #a5f3fc;
 }
 
-.features-section.dark .feature-card.cyan {
+.dark .features-section .feature-card.cyan {
   border-color: #164e63;
 }
 
@@ -139,7 +141,7 @@
   border-color: #a7f3d0;
 }
 
-.features-section.dark .feature-card.emerald {
+.dark .features-section.dark .feature-card.emerald {
   border-color: #064e3b;
 }
 
@@ -147,7 +149,7 @@
   border-color: #c4b5fd;
 }
 
-.features-section.dark .feature-card.purple {
+.dark .features-section .feature-card.purple {
   border-color: #581c87;
 }
 
@@ -155,7 +157,7 @@
   border-color: #fde68a;
 }
 
-.features-section.dark .feature-card.yellow {
+.dark .features-section .feature-card.yellow {
   border-color: #78350f;
 }
 
@@ -163,7 +165,7 @@
   border-color: #fecaca;
 }
 
-.features-section.dark .feature-card.red {
+.dark .features-section .feature-card.red {
   border-color: #7f1d1d;
 }
 
@@ -171,7 +173,7 @@
   border-color: #c7d2fe;
 }
 
-.features-section.dark .feature-card.indigo {
+.dark .features-section .feature-card.indigo {
   border-color: #3730a3;
 }
 
@@ -201,7 +203,7 @@
   background-color: #cffafe;
 }
 
-.features-section.dark .feature-icon-container.cyan {
+.dark .features-section .feature-icon-container.cyan {
   background-color: rgba(6, 182, 212, 0.3);
 }
 
@@ -209,7 +211,7 @@
   background-color: #d1fae5;
 }
 
-.features-section.dark .feature-icon-container.emerald {
+.dark .features-section .feature-icon-container.emerald {
   background-color: rgba(16, 185, 129, 0.3);
 }
 
@@ -217,7 +219,7 @@
   background-color: #e9d5ff;
 }
 
-.features-section.dark .feature-icon-container.purple {
+.dark .features-section .feature-icon-container.purple {
   background-color: rgba(168, 85, 247, 0.3);
 }
 
@@ -225,7 +227,7 @@
   background-color: #fef3c7;
 }
 
-.features-section.dark .feature-icon-container.yellow {
+.dark .features-section .feature-icon-container.yellow {
   background-color: rgba(245, 158, 11, 0.3);
 }
 
@@ -233,7 +235,7 @@
   background-color: #fee2e2;
 }
 
-.features-section.dark .feature-icon-container.red {
+.dark .features-section .feature-icon-container.red {
   background-color: rgba(239, 68, 68, 0.3);
 }
 
@@ -241,7 +243,7 @@
   background-color: #e0e7ff;
 }
 
-.features-section.dark .feature-icon-container.indigo {
+.dark .features-section .feature-icon-container.indigo {
   background-color: rgba(99, 102, 241, 0.3);
 }
 
@@ -250,7 +252,7 @@
   color: #0891b2;
 }
 
-.features-section.dark .feature-icon.cyan {
+.dark .features-section .feature-icon.cyan {
   color: #22d3ee;
 }
 
@@ -258,7 +260,7 @@
   color: #059669;
 }
 
-.features-section.dark .feature-icon.emerald {
+.dark .features-section .feature-icon.emerald {
   color: #34d399;
 }
 
@@ -266,7 +268,7 @@
   color: #9333ea;
 }
 
-.features-section.dark .feature-icon.purple {
+.dark .features-section .feature-icon.purple {
   color: #a78bfa;
 }
 
@@ -274,7 +276,7 @@
   color: #d97706;
 }
 
-.features-section.dark .feature-icon.yellow {
+.dark .features-section .feature-icon.yellow {
   color: #fbbf24;
 }
 
@@ -282,7 +284,7 @@
   color: #dc2626;
 }
 
-.features-section.dark .feature-icon.red {
+.dark .features-section .feature-icon.red {
   color: #f87171;
 }
 
@@ -290,7 +292,7 @@
   color: #4f46e5;
 }
 
-.features-section.dark .feature-icon.indigo {
+.dark .features-section .feature-icon.indigo {
   color: #818cf8;
 }
 
@@ -301,7 +303,7 @@
   margin-bottom: 1rem;
 }
 
-.features-section.dark .feature-title {
+.dark .features-section .feature-title {
   color: white;
 }
 
@@ -310,6 +312,6 @@
   line-height: 1.625;
 }
 
-.features-section.dark .feature-description {
+.dark .features-section .feature-description {
   color: #d1d5db;
 }

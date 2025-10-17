@@ -3,8 +3,11 @@
   background-color: #f9fafb;
 }
 
-.login-section.dark {
-  background-color: #111827;
+.dark .login-section  {
+  /* background: linear-gradient(to bottom right, #581c87, #111827, #1f2937);
+  animation: gradient-x 6s ease infinite;
+  background-size: 200% 200%; */
+  background-color: #1f2937;
 }
 
 .container {
@@ -33,11 +36,19 @@
   margin-bottom: 1rem;
 }
 
+.dark .title {
+  color: #f9fafb;
+}
+
 .subtitle {
   font-size: 1.25rem;
   color: #4b5563;
   max-width: 640px;
   margin: 0 auto;
+}
+
+.dark .subtitle {
+  color: #d1d5db;
 }
 
 .login-grid {
